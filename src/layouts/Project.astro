@@ -19,7 +19,7 @@ const { title, tagline, repo, live, stack = [], facts = [] } = props;
 <Base title={`${title} — Alex Tatarka`} description={tagline}>
   <article class="pb-8 pt-6">
     <a
-      href="/#work"
+      href={`${import.meta.env.BASE_URL}#work`}
       class="inline-flex items-center gap-1.5 text-[14px] text-muted transition-colors hover:text-ink"
       >← All work</a
     >

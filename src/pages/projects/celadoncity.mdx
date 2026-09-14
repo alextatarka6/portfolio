@@ -13,6 +13,8 @@ facts:
 
 import GameBoy from "../../components/GameBoy.astro";
 
+export const base = import.meta.env.BASE_URL;
+
 This is not a video or a screenshot — the wasm module below is the same code
 that builds natively, running the DMG boot sequence and then whatever ROM you
 hand it. Click it and press <strong>Start</strong>.
@@ -60,9 +62,9 @@ a game you start in the card above survives a refresh.
 
 <figure>
   <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-    <img src="/shots/pokemon-red.webp" alt="Pokémon Red running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
-    <img src="/shots/tetris.webp" alt="Tetris running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
-    <img src="/shots/super-mario-land.webp" alt="Super Mario Land running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
+    <img src={`${base}shots/pokemon-red.webp`} alt="Pokémon Red running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
+    <img src={`${base}shots/tetris.webp`} alt="Tetris running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
+    <img src={`${base}shots/super-mario-land.webp`} alt="Super Mario Land running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
   </div>
   <figcaption>
     Commercial titles booting on celadoncity, captured from the native build. No

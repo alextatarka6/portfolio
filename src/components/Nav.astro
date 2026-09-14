@@ -3,7 +3,7 @@ const email = "alextatarka6@gmail.com";
 ---
 
 <header class="flex items-center justify-between py-7">
-  <a href="/" class="group flex items-center gap-3" aria-label="Alex Tatarka — home">
+  <a href={import.meta.env.BASE_URL} class="group flex items-center gap-3" aria-label="Alex Tatarka — home">
     <span
       class="grid h-10 w-10 place-items-center rounded-xl bg-ink text-[15px] font-bold tracking-tight text-white"
       >AT</span
@@ -15,7 +15,7 @@ const email = "alextatarka6@gmail.com";
     >
   </a>
   <nav class="flex items-center gap-1 text-[15px]">
-    <a class="rounded-full px-3 py-2 transition-colors hover:bg-black/5" href="/#work">Work</a>
+    <a class="rounded-full px-3 py-2 transition-colors hover:bg-black/5" href={`${import.meta.env.BASE_URL}#work`}>Work</a>
     <a
       class="rounded-full px-3 py-2 transition-colors hover:bg-black/5"
       href="https://github.com/alextatarka6">GitHub</a

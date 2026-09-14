@@ -28,7 +28,10 @@
     const FAST_FORWARD_RATE = 4;
     const SAVE_DEBOUNCE_FRAMES = 120;
 
-    const ASSET_BASE = '/emu/';
+    // Derived from this script's own URL so the emulator's assets resolve
+    // correctly whether the site is served from the domain root or a
+    // sub-path (e.g. a GitHub Pages project page).
+    const ASSET_BASE = new URL('.', document.currentScript.src).href;
     const DEMO_ROM = ASSET_BASE + 'libbet.gb';
 
     // ── State ────────────────────────────────────────────────────────────────

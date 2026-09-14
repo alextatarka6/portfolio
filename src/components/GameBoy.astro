@@ -64,8 +64,8 @@ const { compact = false } = Astro.props;
   }
 </div>
 
-<script src="/emu/celadoncity.js" is:inline></script>
-<script src="/emu/emu.js" is:inline></script>
+<script src={`${import.meta.env.BASE_URL}emu/celadoncity.js`} is:inline></script>
+<script src={`${import.meta.env.BASE_URL}emu/emu.js`} is:inline></script>
 
 <style>
   /* Scoped so the emulator chrome doesn't leak Tailwind utility churn. */
