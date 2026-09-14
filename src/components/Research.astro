@@ -1,0 +1,27 @@
+---
+// TODO(alex): confirm lab full name, start date, and a one-line description of
+// the eye-tracking work.
+const role = {
+  title: "Research Assistant",
+  org: "AITAR Lab",
+  school: "University of Notre Dame",
+  period: "2026 — present",
+  blurb: "Eye-tracking research: instrumenting and analysing gaze data.",
+};
+---
+
+<!-- Three blocks spread across the card height, so the whitespace reads as
+     rhythm rather than as a gap left by missing content. -->
+<div class="flex h-full flex-col justify-between pt-9">
+  <div>
+    <p class="text-[18px] font-semibold leading-tight">{role.title}</p>
+    <p class="mt-1 text-[18px] leading-tight text-accent-deep">{role.org}</p>
+  </div>
+
+  <p class="text-[15px] leading-relaxed">{role.blurb}</p>
+
+  <div>
+    <p class="text-[14px] text-muted">{role.school}</p>
+    <p class="mt-1.5 font-mono text-[12px] text-muted">{role.period}</p>
+  </div>
+</div>

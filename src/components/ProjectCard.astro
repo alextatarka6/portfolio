@@ -1,0 +1,48 @@
+---
+interface Props {
+  title: string;
+  tagline: string;
+  href: string;
+  repo: string;
+  live?: string;
+  stack: string[];
+}
+const { title, tagline, href, repo, live, stack } = Astro.props;
+---
+
+<article
+  class="group relative rounded-[var(--radius-card)] bg-card p-6 shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)] sm:p-7"
+>
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="min-w-0">
+      <h3 class="text-[22px] font-bold tracking-tight">
+        <a href={href} class="after:absolute after:inset-0 after:content-['']">{title}</a>
+      </h3>
+      <p class="mt-1.5 max-w-lg text-[15px] leading-relaxed text-muted">{tagline}</p>
+    </div>
+    <span
+      class="mt-1 shrink-0 text-[15px] text-muted transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent-deep"
+      aria-hidden="true">↗</span
+    >
+  </div>
+
+  <div class="mt-5 flex flex-wrap items-center gap-1.5">
+    {
+      stack.map((item) => (
+        <span class="rounded-full border border-line px-2.5 py-1 text-[12px] font-medium">
+          {item}
+        </span>
+      ))
+    }
+    <span class="ml-auto flex gap-3 text-[13px] text-muted">
+      <a class="relative z-10 hover:text-ink" href={repo} target="_blank" rel="noopener">Source</a>
+      {
+        live && (
+          <a class="relative z-10 hover:text-ink" href={live} target="_blank" rel="noopener">
+            Live
+          </a>
+        )
+      }
+    </span>
+  </div>
+</article>

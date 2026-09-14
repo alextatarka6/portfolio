@@ -1,0 +1,26 @@
+---
+const groups = [
+  { label: "Systems", items: ["C++17", "C", "Rust", "CMake", "WebAssembly"] },
+  { label: "ML", items: ["PyTorch", "PPO", "NumPy", "Python"] },
+  { label: "Web", items: ["React", "TypeScript", "Node", "FastAPI", "Postgres"] },
+];
+---
+
+<div class="flex h-full flex-col gap-4 pt-9">
+  {
+    groups.map((group) => (
+      <div>
+        <p class="mb-2 text-[12px] font-medium uppercase tracking-[0.08em] text-muted">
+          {group.label}
+        </p>
+        <ul class="flex flex-wrap gap-1.5">
+          {group.items.map((item) => (
+            <li class="rounded-full border border-line px-2.5 py-1 text-[13px] font-medium">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>

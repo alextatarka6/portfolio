@@ -1,0 +1,30 @@
+---
+import PipelineFlow from "./PipelineFlow.astro";
+
+// Figures verified against the protean repo: dataset row count from ROADMAP.md,
+// parameter count from checkpoints/bc_final.pt, episode count from the highest
+// ppo_ep* checkpoint.
+const stats = [
+  { value: "194,715", label: "training rows" },
+  { value: "5.1M", label: "parameters" },
+  { value: "20,000", label: "self-play episodes" },
+];
+---
+
+<div class="flex h-full flex-col justify-between pt-9">
+  <PipelineFlow />
+
+  <dl class="mt-6 grid grid-cols-3 gap-3 border-t border-line pt-4">
+    {
+      stats.map((stat) => (
+        <div>
+          <dt class="sr-only">{stat.label}</dt>
+          <dd>
+            <span class="block text-[22px] font-bold leading-none tracking-tight">{stat.value}</span>
+            <span class="mt-1 block text-[12px] leading-tight text-muted">{stat.label}</span>
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>

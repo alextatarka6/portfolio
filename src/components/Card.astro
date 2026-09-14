@@ -1,0 +1,27 @@
+---
+// The bento primitive: white card, soft shadow, small pill label pinned to the
+// top-left corner — the signature of the reference design.
+interface Props {
+  label?: string;
+  class?: string;
+  padded?: boolean;
+}
+const { label, class: className = "", padded = true } = Astro.props;
+---
+
+<div
+  class:list={[
+    "relative overflow-hidden rounded-[var(--radius-card)] bg-card shadow-[var(--shadow-card)]",
+    padded && "p-5 sm:p-6",
+    className,
+  ]}
+>
+  {
+    label && (
+      <span class="pointer-events-none absolute left-5 top-5 z-10 rounded-full bg-card px-3 py-1 text-[13px] font-medium text-ink shadow-[0_1px_3px_rgb(0_0_0_/_0.08)]">
+        {label}
+      </span>
+    )
+  }
+  <slot />
+</div>

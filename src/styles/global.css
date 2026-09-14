@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  /* Ground is warm off-white; cards are pure white so they lift off it. */
+  --color-ground: #f3f2f5;
+  --color-card: #ffffff;
+  --color-ink: #0a0a0a;
+  --color-muted: #9b9b9b;
+  --color-line: #e6e4ea;
+  --color-accent: #9645d8;
+  /* Deeper tone for small text, where the vivid one loses contrast. */
+  --color-accent-deep: #6d28d9;
+
+  --font-sans: "Inter Tight Variable", "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-card: 24px;
+
+  /* Two layers: a tight contact shadow plus a wide soft one. */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.05), 0 16px 40px rgb(0 0 0 / 0.09);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display type: tight tracking is the whole character of the reference. */
+.display {
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

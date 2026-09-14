@@ -1,0 +1,83 @@
+---
+layout: ../../layouts/Project.astro
+title: protean
+tagline: A Gen 1 OU Pokémon Showdown agent built end to end — scraping and parsing replays, reconstructing what each player actually knew, behaviour cloning, then PPO self-play, playing live on the ladder.
+repo: https://github.com/alextatarka6/protean
+stack: ["Python", "PyTorch", "PPO", "HuggingFace", "WebSockets"]
+facts:
+  - { value: "194,715", label: "training rows" }
+  - { value: "5.1M", label: "parameters" }
+  - { value: "20,000", label: "self-play episodes" }
+  - { value: "139", label: "species modelled" }
+---
+
+import PipelineFlow from "../../components/PipelineFlow.astro";
+
+Inspired by the [metamon paper](https://arxiv.org/abs/2504.04395), protean is a
+complete pipeline rather than a single model: raw Showdown battle logs go in one
+end, and an agent laddering against humans comes out the other.
+
+## Why the data is the hard part
+
+Pokémon replays are recorded from a spectator's point of view, which sees
+everything. An agent has to act from a player's point of view, which does not —
+at turn six you do not know the opponent's remaining team, their held items, or
+which moves they are running.
+
+Training directly on spectator logs therefore teaches the model to use
+information it will never have at inference time. So the pipeline reconstructs
+each battle twice, once per player, filling in only what that player could
+plausibly have known:
+
+- Unrevealed moves, items and abilities are sampled from Smogon monthly usage
+  statistics for the species.
+- When fewer than six Pokémon were revealed, the rest of the team is inferred by
+  sampling teammate co-occurrence — the same way a human infers "that's the
+  standard lead, so they're probably running the standard back four."
+
+The result is 194,715 decision points where the model's view matches what a
+player genuinely saw.
+
+## The pipeline
+
+<figure>
+  <PipelineFlow />
+  <figcaption>Five stages, each one a separate runnable script in the repo.</figcaption>
+</figure>
+
+**Parsing** turns raw `.log` text into typed snapshots — active Pokémon, HP,
+status, boosts, weather and side conditions per turn — at roughly 1,400 battles
+per second.
+
+**Encoding** flattens each snapshot into tensors covering both teams, the field
+state and the legal action mask.
+
+**Behaviour cloning** trains a 5.1M-parameter policy to imitate human play,
+which gets the agent to competence without ever touching a live server.
+
+**PPO self-play** fine-tunes it against copies of itself on a local Showdown
+server, with opponent weights synced to the learner every 50 episodes to keep
+the opposition improving alongside the agent. Twenty thousand episodes, with
+checkpoints every 500.
+
+**Ladder play** connects the trained policy to Pokémon Showdown over WebSockets
+and plays real humans.
+
+## How it actually does
+
+Over 56 rated ladder games the agent went **25–31**, peaking at 1183 and
+settling near 1173, against opponents averaging 1168. That is a losing record by
+a small margin — and it is the honest number.
+
+What it means in practice is that a policy trained entirely on parsed replays
+and self-play holds its own against roughly-equally-rated human ladder players
+without ever having been hand-coded with a single piece of Pokémon strategy. It
+does not know what a Snorlax is. It learned that from logs.
+
+Self-play showed no catastrophic forgetting — move accuracy against the
+behaviour-cloned baseline stayed above 50% throughout fine-tuning.
+
+## What's next
+
+More PPO episodes, a proper evaluation harness against fixed baselines rather
+than the live ladder alone, and a search over the reward shaping.

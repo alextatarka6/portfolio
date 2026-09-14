@@ -1,0 +1,48 @@
+---
+layout: ../../layouts/Project.astro
+title: ssm
+tagline: Section Stock Market — a trading simulation where every user is themselves a tradeable stock, built on a from-scratch matching engine and deployed for real people to use.
+repo: https://github.com/alextatarka6/ssm
+live: https://master.dcy1agiyvre79.amplifyapp.com
+stack: ["Node.js", "Express", "React", "Vite", "Supabase", "AWS"]
+facts:
+  - { value: "In-memory", label: "matching engine" }
+  - { value: "Amplify", label: "frontend hosting" }
+  - { value: "EC2", label: "backend" }
+  - { value: "Live", label: "status" }
+---
+
+Every user who signs up becomes a stock that everyone else can buy and sell.
+Prices move because people trade them, which makes the whole thing a small,
+self-contained market with real participants.
+
+## The matching engine
+
+The core is an order book held in memory, with orders matched on arrival rather
+than batched. Keeping it in memory makes fills fast and the logic simple to
+reason about; the cost is that process death loses state, so the engine
+periodically writes a JSON snapshot and restores from it on boot.
+
+That is a deliberate trade — a database round trip per order would have been
+more durable and considerably slower, and for a section-sized market the
+snapshot window is an acceptable exposure.
+
+## Architecture
+
+- **Backend** — Node.js and Express on EC2. Owns the order book, the matching
+  loop, snapshot persistence, and an internal API guarded by a shared key.
+- **Frontend** — React and Vite, hosted on AWS Amplify, talking to the backend
+  through a configurable API base.
+- **Auth and users** — Supabase, with Postgres migrations checked into the repo
+  and user records synced across to the market service.
+
+## The part I'd point at in an interview
+
+The frontend ships a complete mock layer — `api.mock.js` and
+`supabase.mock.js`, swapped in through a Vite alias — so the entire app runs
+with stub data and no backend, no Supabase project and no `.env` file at all.
+
+That started as a convenience for working on the UI on a plane. It turned out to
+be the thing that made the project pleasant to develop: front-end work stopped
+depending on backend state entirely, and onboarding anyone else became one
+command instead of a setup document.

@@ -1,0 +1,112 @@
+---
+// Mounts the real celadoncity wasm build. `emu.js` binds to fixed element IDs,
+// so this markup mirrors the emulator's own frontend contract — only one
+// instance may exist per page.
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<div class="flex h-full flex-col">
+  <div
+    id="gb-stage"
+    class="relative grid flex-1 place-items-center rounded-2xl bg-[#12140f] p-4"
+  >
+    <canvas
+      id="gb-canvas"
+      width="160"
+      height="144"
+      class="h-auto w-full max-w-[380px] rounded-md bg-[#9bbc0f] shadow-[0_0_0_1px_rgb(255_255_255_/_0.08)]"
+      style="image-rendering: pixelated;"
+      aria-label="Game Boy screen"></canvas>
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+    <span id="gb-title" class="font-mono text-[13px] font-medium">No ROM loaded</span>
+    <span id="gb-status" class="font-mono text-[12px] text-muted">Loading emulator…</span>
+  </div>
+
+  <div class="mt-3 flex flex-wrap items-center gap-1.5">
+    <button id="gb-open" class="gb-ctl">Open ROM</button>
+    <button id="gb-pause" class="gb-ctl">Pause</button>
+    <button id="gb-reset" class="gb-ctl">Reset</button>
+    <button id="gb-ff" class="gb-ctl" title="Hold to fast-forward (Space)">Fast ▶▶</button>
+    <button id="gb-fullscreen" class="gb-ctl">Fullscreen</button>
+    <label class="gb-ctl flex items-center gap-1.5">
+      Palette
+      <select id="gb-palette" class="cursor-pointer bg-transparent font-medium outline-none"></select>
+    </label>
+    <input type="file" id="gb-file" accept=".gb,.gbc" hidden />
+  </div>
+
+  <div id="gb-slots" class="mt-3 flex flex-wrap gap-1" hidden={compact} aria-label="Save state slots">
+  </div>
+
+  {
+    !compact && (
+      <p class="mt-4 text-[13px] leading-relaxed text-muted">
+        Save states: click a slot to load, shift-click to save.{" "}
+        <kbd class="font-mono">↑↓←→</kbd> d-pad · <kbd class="font-mono">Z</kbd>/
+        <kbd class="font-mono">X</kbd> A/B · <kbd class="font-mono">Enter</kbd> start ·{" "}
+        <kbd class="font-mono">Space</kbd> fast-forward. Bundled demo is{" "}
+        <a
+          class="text-ink underline decoration-line underline-offset-2 hover:decoration-ink"
+          href="https://github.com/pinobatch/libbet"
+          target="_blank"
+          rel="noopener"
+        >
+          Libbet and the Magic Floor
+        </a>{" "}
+        by Damian Yerrick (zlib licence). No commercial ROMs are distributed here — bring your own.
+      </p>
+    )
+  }
+</div>
+
+<script src="/emu/celadoncity.js" is:inline></script>
+<script src="/emu/emu.js" is:inline></script>
+
+<style>
+  /* Scoped so the emulator chrome doesn't leak Tailwind utility churn. */
+  .gb-ctl {
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-card);
+    padding: 0.3rem 0.7rem;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+  .gb-ctl:hover {
+    background: #faf9fb;
+    border-color: #d6d3dc;
+  }
+  .gb-ctl:active,
+  .gb-ctl.active {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: #fff;
+  }
+  #gb-slots :global(.slot) {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    border: 1px solid var(--color-line);
+    background: var(--color-card);
+    font-size: 11px;
+    cursor: pointer;
+  }
+  #gb-slots :global(.slot.filled) {
+    background: var(--color-accent-deep);
+    border-color: var(--color-accent-deep);
+    color: #fff;
+  }
+  #gb-stage:fullscreen {
+    background: #12140f;
+  }
+  #gb-stage:fullscreen canvas {
+    max-width: min(100vw, 160 / 144 * 100vh);
+  }
+</style>

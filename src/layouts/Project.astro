@@ -1,0 +1,148 @@
+---
+import Base from "../layouts/Base.astro";
+
+interface Props {
+  frontmatter?: any;
+  title: string;
+  tagline: string;
+  repo: string;
+  live?: string;
+  stack: string[];
+  facts?: { value: string; label: string }[];
+}
+// MDX pages pass their frontmatter under `frontmatter`; .astro pages pass props
+// directly. Accept both so the layout works either way.
+const props = Astro.props.frontmatter ?? Astro.props;
+const { title, tagline, repo, live, stack = [], facts = [] } = props;
+---
+
+<Base title={`${title} — Alex Tatarka`} description={tagline}>
+  <article class="pb-8 pt-6">
+    <a
+      href="/#work"
+      class="inline-flex items-center gap-1.5 text-[14px] text-muted transition-colors hover:text-ink"
+      >← All work</a
+    >
+
+    <header class="mt-7">
+      <h1 class="display text-[clamp(2.2rem,6vw,3.8rem)]">
+        {title}<span class="text-accent">.</span>
+      </h1>
+      <p class="mt-4 max-w-2xl text-[18px] leading-relaxed text-muted">{tagline}</p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-1.5">
+        {
+          stack.map((item) => (
+            <span class="rounded-full border border-line px-2.5 py-1 text-[13px] font-medium">
+              {item}
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-2.5">
+        <a
+          href={repo}
+          target="_blank"
+          rel="noopener"
+          class="rounded-full bg-ink px-5 py-2.5 text-[15px] font-medium text-white transition-transform duration-200 hover:-translate-y-0.5"
+          >Source</a
+        >
+        {
+          live && (
+            <a
+              href={live}
+              target="_blank"
+              rel="noopener"
+              class="rounded-full border border-line bg-card px-5 py-2.5 text-[15px] font-medium transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              Live site
+            </a>
+          )
+        }
+      </div>
+    </header>
+
+    {
+      facts.length > 0 && (
+        <dl class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {facts.map((fact) => (
+            <div class="rounded-[var(--radius-card)] bg-card p-5 shadow-[var(--shadow-card)]">
+              <dt class="sr-only">{fact.label}</dt>
+              <dd>
+                <span class="block text-[24px] font-bold leading-none tracking-tight">
+                  {fact.value}
+                </span>
+                <span class="mt-1.5 block text-[13px] leading-tight text-muted">{fact.label}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    <div class="prose-body mt-12 max-w-2xl">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style is:global>
+  /* Long-form typography, scoped to case-study bodies. */
+  .prose-body h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 2.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose-body h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose-body p,
+  .prose-body li {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .prose-body p {
+    margin-bottom: 1rem;
+  }
+  .prose-body ul {
+    list-style: disc;
+    padding-left: 1.15rem;
+    margin-bottom: 1rem;
+  }
+  .prose-body li {
+    margin-bottom: 0.35rem;
+  }
+  .prose-body a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-line);
+    text-underline-offset: 3px;
+  }
+  .prose-body a:hover {
+    text-decoration-color: var(--color-ink);
+  }
+  .prose-body code {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    padding: 0.1rem 0.35rem;
+  }
+  .prose-body strong {
+    font-weight: 650;
+  }
+  .prose-body figure {
+    margin: 1.75rem 0;
+  }
+  .prose-body figcaption {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin-top: 0.6rem;
+  }
+</style>

@@ -1,0 +1,107 @@
+---
+import Base from "../layouts/Base.astro";
+import Card from "../components/Card.astro";
+import Avatar from "../components/Avatar.astro";
+import GameBoy from "../components/GameBoy.astro";
+import Pipeline from "../components/Pipeline.astro";
+import Research from "../components/Research.astro";
+import Toolbox from "../components/Toolbox.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import fs from "node:fs";
+
+// The primary CTA points at the résumé once one exists, and falls back to email
+// so the button is never a dead link.
+const hasResume = fs.existsSync(new URL("../../public/resume.pdf", import.meta.url));
+
+const projects = [
+  {
+    title: "protean",
+    tagline:
+      "A Gen 1 OU Pokémon Showdown agent built from scratch — replay parser, POV reconstruction, behaviour cloning, then PPO self-play, playing live on the ladder.",
+    href: "/projects/protean/",
+    repo: "https://github.com/alextatarka6/protean",
+    stack: ["Python", "PyTorch", "PPO", "HuggingFace"],
+  },
+  {
+    title: "celadoncity",
+    tagline:
+      "A cycle-driven Game Boy (DMG) emulator in C++17 — CPU, MMU, PPU and a full four-channel APU, compiled to WebAssembly and playable above.",
+    href: "/projects/celadoncity/",
+    repo: "https://github.com/alextatarka6/celadoncity",
+    stack: ["C++17", "CMake", "SDL2", "WebAssembly"],
+  },
+  {
+    title: "ssm",
+    tagline:
+      "Section Stock Market — every user is a tradeable stock. In-memory matching engine with snapshot persistence, React front end, deployed and live.",
+    href: "/projects/ssm/",
+    repo: "https://github.com/alextatarka6/ssm",
+    live: "https://master.dcy1agiyvre79.amplifyapp.com",
+    stack: ["Node", "Express", "React", "Supabase"],
+  },
+];
+---
+
+<Base>
+  <!-- Hero: weight and colour do the work — grey for connective words, black for
+       the nouns, orange for the punchline. -->
+  <section class="pb-14 pt-8 sm:pb-20 sm:pt-14">
+    <h1 class="display text-[clamp(2.4rem,7.2vw,5.2rem)]">
+      <span class="block">
+        Hi, I'm <Avatar
+          class="mx-1 h-[0.82em] w-[0.82em] -translate-y-[0.06em]"
+        /> Alex Tatarka!
+      </span>
+      <span class="mt-1 block text-muted">
+        I'm a <span class="text-ink">CS student</span> at
+      </span>
+      <span class="mt-1 block text-accent">Notre Dame.</span>
+    </h1>
+
+    <div class="mt-9 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+      <a
+        href={hasResume ? "/resume.pdf" : "mailto:alextatarka6@gmail.com"}
+        class="inline-flex shrink-0 self-start items-center justify-center rounded-full bg-ink px-7 py-3.5 text-[16px] font-medium text-white transition-transform duration-200 hover:-translate-y-0.5"
+      >
+        {hasResume ? "Resume" : "Get in touch"}
+      </a>
+      <p class="max-w-md text-[16px] leading-relaxed text-muted">
+        Class of 2028. I write emulators, reinforcement learning agents, and things that ship —
+        have a look around, or <a
+          class="text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink"
+          href="mailto:alextatarka6@gmail.com">get in touch</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <!-- Bento: every card is load-bearing proof, not decoration. -->
+  <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <Card label="Research" class="lg:col-span-1">
+      <Research />
+    </Card>
+
+    <Card label="Game Boy, playable" class="sm:col-span-2">
+      <div class="pt-9">
+        <GameBoy compact />
+      </div>
+    </Card>
+
+    <Card label="protean" class="sm:col-span-2">
+      <Pipeline />
+    </Card>
+
+    <Card label="Toolbox" class="lg:col-span-1">
+      <Toolbox />
+    </Card>
+  </section>
+
+  <section id="work" class="mt-20 scroll-mt-8 sm:mt-28">
+    <h2 class="display text-[clamp(1.9rem,4.4vw,2.9rem)]">
+      Selected work<span class="text-accent">.</span>
+    </h2>
+    <div class="mt-7 grid gap-4">
+      {projects.map((project) => <ProjectCard {...project} />)}
+    </div>
+  </section>
+</Base>

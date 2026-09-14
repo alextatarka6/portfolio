@@ -1,0 +1,77 @@
+---
+layout: ../../layouts/Project.astro
+title: celadoncity
+tagline: A Game Boy (DMG) emulator written from scratch in C++17 — CPU, memory, video and a full four-channel audio unit — compiled to WebAssembly and playable in the browser.
+repo: https://github.com/alextatarka6/celadoncity
+stack: ["C++17", "CMake", "SDL2", "WebAssembly", "Emscripten"]
+facts:
+  - { value: "8,102", label: "lines of C++" }
+  - { value: "4", label: "audio channels" }
+  - { value: "3", label: "cartridge mappers" }
+  - { value: "108 KB", label: "wasm binary" }
+---
+
+import GameBoy from "../../components/GameBoy.astro";
+
+This is not a video or a screenshot — the wasm module below is the same code
+that builds natively, running the DMG boot sequence and then whatever ROM you
+hand it. Click it and press <strong>Start</strong>.
+
+<div class="not-prose my-8 rounded-[var(--radius-card)] bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
+  <GameBoy />
+</div>
+
+## What's implemented
+
+- **CPU** — most of the LR35902 instruction set with interrupt handling,
+  dispatched through an opcode table carrying per-instruction cycle counts.
+- **MMU** — the full memory map, bank switching, and OAM DMA.
+- **Cartridges** — no-MBC, MBC1 and MBC3, including battery-backed save RAM.
+- **Video** — background, window and sprite layers rendered per scanline.
+- **Audio** — all four channels: two square waves (one with sweep), the wave
+  channel and the noise channel, driven by the frame sequencer and mixed to
+  44.1 kHz stereo.
+- **Timer, serial and joypad.**
+
+## The audio was the hard part
+
+Video is forgiving: draw a frame slightly late and nobody notices. Audio is
+not — the APU produces samples at a fixed 44.1 kHz, and if the emulator runs
+even slightly fast or slow the buffer starves or overflows and you hear it
+immediately as clicks.
+
+The browser build solves this by inverting the usual relationship between the
+two clocks. An `AudioWorklet` reports how many stereo pairs it still holds, and
+the frame loop nudges its own pace to keep that number near a target of ~4,096
+samples (about 93 ms). Video is locked to the audio clock rather than the other
+way round, so the picture drifts imperceptibly instead of the sound breaking.
+
+## Running in the browser
+
+The WebAssembly target is built with Emscripten and exposes a flat C ABI —
+`gb_run_frame`, `gb_framebuffer`, `gb_set_button`, `gb_save_state` and friends.
+The JavaScript side owns only the frame clock, the canvas, the audio graph,
+input and persistence; all emulation happens in the wasm module.
+
+Battery saves and save states are written to `localStorage`, keyed per ROM, so
+a game you start in the card above survives a refresh.
+
+## Compatibility
+
+<figure>
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <img src="/shots/pokemon-red.webp" alt="Pokémon Red running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
+    <img src="/shots/tetris.webp" alt="Tetris running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
+    <img src="/shots/super-mario-land.webp" alt="Super Mario Land running in celadoncity" width="592" height="576" loading="lazy" decoding="async" class="rounded-xl shadow-[var(--shadow-card)]" />
+  </div>
+  <figcaption>
+    Commercial titles booting on celadoncity, captured from the native build. No
+    ROMs are distributed with this site — the browser build ships only the
+    homebrew demo.
+  </figcaption>
+</figure>
+
+## What's next
+
+A native SDL2 front end for a fully playable desktop build, and a pass over the
+remaining CPU edge cases against the standard test ROM suites.

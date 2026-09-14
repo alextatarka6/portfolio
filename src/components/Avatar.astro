@@ -1,0 +1,34 @@
+---
+import fs from "node:fs";
+// Drop a square photo at public/me.jpg (or .png) and it replaces the monogram
+// automatically — no code change needed.
+const candidates = ["me.jpg", "me.jpeg", "me.png", "me.webp"];
+const found = candidates.find((f) => fs.existsSync(new URL(`../../public/${f}`, import.meta.url)));
+
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+
+{
+  found ? (
+    <img
+      src={`/${found}`}
+      alt="Alex Tatarka"
+      width="96"
+      height="96"
+      class:list={["inline-block rounded-[28%] object-cover align-middle shadow-[var(--shadow-card)]", className]}
+    />
+  ) : (
+    <span
+      class:list={[
+        "inline-grid place-items-center rounded-[28%] bg-ink align-middle font-bold tracking-tight text-white shadow-[var(--shadow-card)]",
+        className,
+      ]}
+      aria-hidden="true"
+    >
+      <span class="text-[0.38em]">AT</span>
+    </span>
+  )
+}

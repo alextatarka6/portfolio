@@ -1,0 +1,48 @@
+---
+// Single source of truth for the protean pipeline diagram — used by the bento
+// card and the case study. Each arrow is grouped with the node before it so a
+// wrap never leaves an arrow orphaned at the start of a line.
+interface Props {
+  showNotes?: boolean;
+}
+const { showNotes = true } = Astro.props;
+
+const stages = [
+  { n: "01", label: "Replays", note: "Showdown logs" },
+  { n: "02", label: "Dataset", note: "POV reconstruction" },
+  { n: "03", label: "BC", note: "behaviour cloning" },
+  { n: "04", label: "PPO", note: "self-play" },
+  { n: "05", label: "Ladder", note: "live play", accent: true },
+];
+---
+
+<ol class="flex list-none flex-wrap items-stretch gap-2 pl-0">
+  {
+    stages.map((stage, i) => (
+      <li class="mb-0 flex items-center gap-2">
+        <div
+          class:list={[
+            "rounded-xl border px-3 py-2.5",
+            stage.accent ? "border-accent/30 bg-accent/[0.06]" : "border-line bg-card",
+          ]}
+        >
+          <span
+            class:list={[
+              "block font-mono text-[10px] font-medium",
+              stage.accent ? "text-accent-deep" : "text-muted",
+            ]}
+          >
+            {stage.n}
+          </span>
+          <span class="block text-[14px] font-semibold leading-tight">{stage.label}</span>
+          {showNotes && <span class="block text-[11px] leading-tight text-muted">{stage.note}</span>}
+        </div>
+        {i < stages.length - 1 && (
+          <span class="text-muted" aria-hidden="true">
+            →
+          </span>
+        )}
+      </li>
+    ))
+  }
+</ol>
