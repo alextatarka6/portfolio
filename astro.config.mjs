@@ -8,7 +8,11 @@ import tailwindcss from '@tailwindcss/vite';
 // file in public/.
 export default defineConfig({
   site: 'https://alextatarka6.github.io/portfolio',
-  base: '/portfolio',
+  // Trailing slash matters: import.meta.env.BASE_URL mirrors this value
+  // exactly (no slash auto-appended), and every hardcoded asset path in
+  // this codebase is built by concatenating BASE_URL directly onto a
+  // relative path (e.g. `${BASE_URL}favicon.svg`).
+  base: '/portfolio/',
   integrations: [mdx()],
   vite: { plugins: [tailwindcss()] },
 });

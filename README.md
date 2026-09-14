@@ -16,7 +16,7 @@ src/pages/projects/*.mdx       Case studies (frontmatter drives the layout heade
 src/components/                Bento cards and shared pieces
 src/layouts/Base.astro         Shell: head, nav, footer
 src/layouts/Project.astro      Case-study chrome + long-form typography
-src/styles/global.css          Design tokens (@theme) — colours, radius, shadows
+src/styles/global.css          Design tokens (@theme) - colors, radius, shadows
 public/emu/                    celadoncity wasm build, vendored (see below)
 ```
 
